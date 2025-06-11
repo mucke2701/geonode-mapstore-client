@@ -44,7 +44,7 @@ import favoriteEpics from '@js/epics/favorite';
 import DetailsPanel from '@js/components/DetailsPanel';
 import { processingDownload } from '@js/selectors/resourceservice';
 import { resourceHasPermission, getCataloguePath } from '@js/utils/ResourceUtils';
-import {downloadResource, setFavoriteResource} from '@js/actions/gnresource';
+import { downloadResource, setFavoriteResource } from '@js/actions/gnresource';
 import FiltersForm from '@js/components/FiltersForm';
 import usePluginItems from '@mapstore/framework/hooks/usePluginItems';
 import { ProcessTypes } from '@js/utils/ResourceServiceUtils';
@@ -123,7 +123,7 @@ const removeMenuHighlight = () => {
     menuHiglighted?.classList.remove('highlight-menu');
 };
 const getCatalogPage = (pathname) => {
-    const {params: {page} = {}} = matchPath(pathname, { path: "/:page", exact: true }) ?? {};
+    const { params: { page } = {} } = matchPath(pathname, { path: "/:page", exact: true }) ?? {};
     return page;
 };
 const withPageConfig = (Component) => {
@@ -144,7 +144,7 @@ const withPageConfig = (Component) => {
 
         const mergePropsWithPageConfigs = () => {
             const pageName = getCatalogPage(props.location.pathname, props);
-            return {...props, ...props?.[`${pageName}Page`]};
+            return { ...props, ...props?.[`${pageName}Page`] };
         };
 
         return <Component {...mergePropsWithPageConfigs()} />;
@@ -479,6 +479,11 @@ function ResourcesGrid({
     onReplaceLocation,
     error,
     enableGeoNodeCardsMenuItems,
+    /**
+     * pull the configured default for the filter‐form toggle
+     * from plugin.cfg.showFilterForm (via overrideLocalConfig).
+    */
+    showFilterForm: showFilterFormCfg = false,
     detailsTabs = [],
     onGetFacets,
     facets,
@@ -534,7 +539,7 @@ function ResourcesGrid({
         excludeQueryKeys: []
     });
 
-    const [_showFilterForm, setShowFilterForm] = useState(false);
+    const [_showFilterForm, setShowFilterForm] = useState(showFilterFormCfg);
     const showDetail = !isEmpty(resource);
     const showFilterForm = _showFilterForm && !showDetail;
 
@@ -606,8 +611,8 @@ function ResourcesGrid({
     useEffect(() => {
         let pathname = location.pathname;
         const initialize = (pathname === '/'
-        || !isEmpty(getMatchPath())
-        || isCatalogPage(pathname)) && init;
+            || !isEmpty(getMatchPath())
+            || isCatalogPage(pathname)) && init;
 
         if (initialize) {
             pathname = getUpdatedPathName();
@@ -672,25 +677,27 @@ function ResourcesGrid({
                 const options = matchPath(pathname, { path: matchedPath, exact: true });
                 !isCatalogPage(location.pathname) && onReplaceLocation('' + (location.search || ''));
                 switch (options.path) {
-                case '/search':
-                case '/detail/:pk': {
-                    break;
-                }
-                case '/search/filter': {
-                    handleShowFilterForm(true);
-                    break;
-                }
-                case '/detail/:resourceType/:pk': {
-                    const { query: locationQuery } = url.parse(location.search, true);
-                    const search = url.format({ query: {
-                        ...locationQuery,
-                        d: `${options?.params?.pk};${options?.params?.resourceType}`
-                    }});
-                    simulateAClick('#' + (search || ''));
-                    break;
-                }
-                default:
-                    break;
+                    case '/search':
+                    case '/detail/:pk': {
+                        break;
+                    }
+                    case '/search/filter': {
+                        handleShowFilterForm(true);
+                        break;
+                    }
+                    case '/detail/:resourceType/:pk': {
+                        const { query: locationQuery } = url.parse(location.search, true);
+                        const search = url.format({
+                            query: {
+                                ...locationQuery,
+                                d: `${options?.params?.pk};${options?.params?.resourceType}`
+                            }
+                        });
+                        simulateAClick('#' + (search || ''));
+                        break;
+                    }
+                    default:
+                        break;
                 }
             }
         }
@@ -770,7 +777,7 @@ function ResourcesGrid({
                                 cardLayoutStyle={cardLayoutStyleState}
                                 containerStyle={panel
                                     ? { maxWidth: '100%' }
-                                    : {...((containerHeight && isPaginated) && { minHeight: containerHeight })}
+                                    : { ...((containerHeight && isPaginated) && { minHeight: containerHeight }) }
                                 }
                                 header={
                                     <FiltersMenu
@@ -843,7 +850,7 @@ function ResourcesGrid({
                             </>
                         }
                     </div>
-                    {loading && (totalResources || 0) === 0 ? <MainLoader className="gn-main-grid-loader"/> : null}
+                    {loading && (totalResources || 0) === 0 ? <MainLoader className="gn-main-grid-loader" /> : null}
                 </>
             </Portal>
             {!panel && <>
