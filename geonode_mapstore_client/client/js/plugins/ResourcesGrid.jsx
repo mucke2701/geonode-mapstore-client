@@ -483,7 +483,7 @@ function ResourcesGrid({
      * pull the configured default for the filter‐form toggle
      * from plugin.cfg.showFilterForm (via overrideLocalConfig).
     */
-    showFilterForm: showFilterFormCfg = false,
+    showFilterForm: showFilterFormCfg = true,
     detailsTabs = [],
     onGetFacets,
     facets,
