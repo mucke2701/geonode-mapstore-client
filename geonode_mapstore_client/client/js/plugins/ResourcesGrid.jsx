@@ -483,7 +483,7 @@ function ResourcesGrid({
      * pull the configured default for the filter‐form toggle
      * from plugin.cfg.showFilterForm (via overrideLocalConfig).
     */
-    showFilterForm: showFilterFormCfg = true,
+    showFilterForm: showFilterFormCfg = false,
     detailsTabs = [],
     onGetFacets,
     facets,
@@ -541,6 +541,10 @@ function ResourcesGrid({
 
     const [_showFilterForm, setShowFilterForm] = useState(showFilterFormCfg);
     const showDetail = !isEmpty(resource);
+    useEffect(() => {
+        setShowFilterForm(showFilterFormCfg);
+    }, [showFilterFormCfg]);
+    // console.log(_showFilterForm)
     const showFilterForm = _showFilterForm && !showDetail;
 
     const handleShowFilterForm = (show) => {
